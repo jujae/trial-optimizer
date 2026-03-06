@@ -1,11 +1,11 @@
 ---
 name: trial-optimizer-graphical
-description: "Optimize multiplicity control designs using the trial_optimizer package (graphical procedures: alpha weights + transition matrix; optional group sequential/interim analyses with alpha spending). Use this skill whenever the user mentions trial_optimizer, graphical procedures, multiplicity/FWER, alpha allocation, transition matrices, or group sequential / interim analyses (O'Brien-Fleming, Pocock, Hwang-Shih-DeCani) and wants an optimized procedure or a reproducible optimization run."
+description: "Optimize multiplicity control designs with a standalone, vendored trial_optimizer implementation (graphical procedures: alpha weights + transition matrix; optional group sequential/interim analyses with alpha spending). Use this skill whenever the user mentions trial_optimizer, graphical procedures, multiplicity/FWER, alpha allocation, transition matrices, or group sequential / interim analyses (O'Brien-Fleming, Pocock, Hwang-Shih-DeCani) and wants an optimized procedure or a reproducible optimization run."
 ---
 
 # Trial Optimizer (Graphical + Sequential) Skill
 
-Use this skill to turn a trial's *multiplicity problem statement* into a reproducible optimization run using the `trial_optimizer` project in this workspace.
+Use this skill to turn a trial's *multiplicity problem statement* into a reproducible optimization run using the **standalone** `trial-optimizer-graphical` skill (it vendors the `trial_optimizer` Python package, so no separate repo checkout is required).
 
 ## What this skill produces
 You will:
@@ -34,26 +34,18 @@ If the user is unsure, default to:
 - single-stage (non-sequential)
 
 ## Workflow
-### 1) Locate the repo and make sure deps are installed
-Set the repo path to wherever you have `trial_optimizer` checked out:
-- `<path-to-trial_optimizer-repo>`
+### 1) Install Python dependencies
+This skill vendors the `trial_optimizer` code, but you still need its Python dependencies installed in whatever environment you run the script.
 
-If imports fail, from the repo root create a venv and install editable:
+Minimal install (PowerShell):
 ```powershell
-python -m venv .venv
-.\.venv\Scripts\activate
-pip install -e .
+python -m pip install --upgrade pip
+python -m pip install torch numpy scipy matplotlib tqdm
 ```
 
-Note (Windows): if `python` resolves to the Microsoft Store app alias, call the venv interpreter explicitly (example):
+Optional (only for the graph PNG):
 ```powershell
-$py = "<path-to-trial_optimizer-repo>\.venv\Scripts\python.exe"
-& $py -V
-```
-
-Optional (only for graph PNG):
-```powershell
-pip install networkx
+python -m pip install networkx
 ```
 
 ### 2) Create a config JSON
@@ -67,9 +59,8 @@ Copy one next to where you want outputs, then edit it.
 ### 3) Run the optimization
 From anywhere (using an explicit interpreter):
 ```powershell
-$py = "<path-to-python-interpreter>"  # e.g. <path-to-trial_optimizer-repo>\.venv\Scripts\python.exe on Windows
+$py = "<path-to-python-interpreter>"  # e.g. .\.venv\Scripts\python.exe on Windows
 & $py <path-to-skill-dir>\scripts\run_trial_optimizer.py `
-  --repo <path-to-trial_optimizer-repo> `
   --config .\trial_optimizer_config.json `
   --outdir .\trial_optimizer_out
 ```
@@ -83,5 +74,5 @@ Always include:
 
 ## Notes / gotchas
 - The upstream project has migrated to the new objective API (`WeightedSuccess`, `MarginalRejection`, `GatedSuccess`). Avoid legacy objective class names.
-- Optimization is stochastic; for "final" numbers, increase `benchmark.n_simulations`.
+- Optimization is stochastic; for "final" numbers, increase `benchmark.n_simulations` and consider increasing `optimizer.n_eval_samples`.
 - For sequential designs, confirm information fractions are sensible and monotone increasing to 1.0.
