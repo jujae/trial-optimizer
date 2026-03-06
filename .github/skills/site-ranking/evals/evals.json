@@ -1,0 +1,23 @@
+{
+  "skill_name": "site-ranking",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Rank top clinical trial sites for breast cancer in the United States. Search broadly (no location), then filter the ranked list to US sites. Use a collaboration-hub metric.",
+      "expected_output": "Uses ranking.filters country=United States (post-ranking) and metric degree/pagerank; returns ranking.top_sites list.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Find the sites with the most trials for Alzheimer's disease and explain why frequency is the right metric.",
+      "expected_output": "Uses metric=frequency; returns ranking.top_sites ordered by num_trials; brief rationale.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I need trials in California (not just top sites). Search for trials in California and then rank the sites by frequency.",
+      "expected_output": "Uses search.location=California (because user asked for trials in a location), then metric=frequency.",
+      "files": []
+    }
+  ]
+}
