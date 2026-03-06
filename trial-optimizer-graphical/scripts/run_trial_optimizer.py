@@ -24,10 +24,16 @@ def _as_path(p: str) -> Path:
     return Path(p).expanduser().resolve()
 
 
-def _maybe_add_repo_to_syspath(repo: Path) -> None:
-    # Allow running without installing the package.
-    if repo.exists() and repo.is_dir():
-        sys.path.insert(0, str(repo))
+def _add_vendor_to_syspath() -> None:
+    """Make the skill standalone by preferring the vendored trial_optimizer package.
+
+    If the vendor dir is missing, we fall back to an installed `trial_optimizer`.
+    """
+
+    skill_root = Path(__file__).resolve().parents[1]
+    vendor_dir = skill_root / "vendor"
+    if vendor_dir.exists() and vendor_dir.is_dir():
+        sys.path.insert(0, str(vendor_dir))
 
 
 def _parse_correlation(corr: Union[float, List[List[float]], List[float]]) -> Union[float, np.ndarray]:
@@ -141,19 +147,17 @@ def _plot_procedure(outdir: Path, proc, labels: Optional[List[str]]) -> Optional
 
 def main() -> int:
     ap = argparse.ArgumentParser(description="Run trial_optimizer optimization from a JSON config")
-    ap.add_argument("--repo", required=True, help="Path to trial_optimizer repository root")
     ap.add_argument("--config", required=True, help="Path to JSON config")
     ap.add_argument("--outdir", required=True, help="Output directory")
     ap.add_argument("--seed", type=int, default=123, help="RNG seed for Monte Carlo benchmarking")
     ap.add_argument("--no-plots", action="store_true", help="Disable plot generation")
     args = ap.parse_args()
 
-    repo = _as_path(args.repo)
     cfg_path = _as_path(args.config)
     outdir = _as_path(args.outdir)
     outdir.mkdir(parents=True, exist_ok=True)
 
-    _maybe_add_repo_to_syspath(repo)
+    _add_vendor_to_syspath()
     cfg = _load_json(cfg_path)
 
     m = int(cfg["m"])
@@ -271,7 +275,6 @@ def main() -> int:
 
     summary = {
         "config_path": str(cfg_path),
-        "repo": str(repo),
         "m": m,
         "alpha": alpha,
         "effect_sizes": effect_sizes.tolist(),
