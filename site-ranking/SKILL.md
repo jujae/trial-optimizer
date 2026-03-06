@@ -19,7 +19,7 @@ This skill provides a deterministic implementation of ds_ai_platform-style **sit
 Install on your server:
 
 ```bash
-pip install -r .github/skills/site-ranking/requirements.txt
+pip install -r site-ranking/requirements.txt
 ```
 
 ## Prompt conventions (critical)
@@ -38,7 +38,7 @@ Rationale: centrality rankings are more informative with a broader network; filt
 2) Run:
 
 ```bash
-python .github/skills/site-ranking/scripts/run_site_ranking.py --file payload.json --pretty
+python site-ranking/scripts/run_site_ranking.py --file payload.json --pretty
 ```
 
 ## Payload schema
