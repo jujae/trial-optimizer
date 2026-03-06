@@ -1,0 +1,33 @@
+{
+  "m": 4,
+  "alpha": 0.025,
+  "one_sided": true,
+  "hypothesis_labels": ["H1: Primary", "H2: Key secondary", "H3: Secondary", "H4: Exploratory"],
+  "effect_sizes": [2.1, 1.9, 1.4, 1.2],
+  "correlation": 0.3,
+  "objective": {
+    "success": {
+      "type": "gated",
+      "dependencies": {
+        "1": [0],
+        "2": [0]
+      }
+    },
+    "weights": [0.6, 0.25, 0.1, 0.05]
+  },
+  "optimizer": {
+    "n_iterations": 600,
+    "batch_size": 2000,
+    "learning_rate": 0.05,
+    "patience": 200,
+    "eval_every": 50,
+    "n_eval_samples": 20000,
+    "verbose": true
+  },
+  "benchmark": {
+    "n_simulations": 30000
+  },
+  "sequential": {
+    "enabled": false
+  }
+}
