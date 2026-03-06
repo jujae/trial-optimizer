@@ -1,0 +1,30 @@
+{
+  "m": 4,
+  "alpha": 0.025,
+  "one_sided": true,
+  "hypothesis_labels": ["H1", "H2", "H3", "H4"],
+  "effect_sizes": [2.5, 2.2, 2.0, 1.8],
+  "correlation": 0.3,
+  "objective": {
+    "success": {"type": "marginal"},
+    "weights": [1, 1, 1, 1]
+  },
+  "procedure_init": {
+    "weights": [0.25, 0.25, 0.25, 0.25]
+  },
+  "optimizer": {
+    "n_iterations": 400,
+    "batch_size": 2000,
+    "learning_rate": 0.05,
+    "patience": 150,
+    "eval_every": 50,
+    "n_eval_samples": 15000,
+    "verbose": true
+  },
+  "benchmark": {
+    "n_simulations": 20000
+  },
+  "sequential": {
+    "enabled": false
+  }
+}
