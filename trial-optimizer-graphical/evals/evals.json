@@ -1,0 +1,45 @@
+{
+  "skill_name": "trial-optimizer-graphical",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I have a 4-endpoint trial. Please optimize a graphical multiple testing procedure (weights + transition matrix) assuming alpha=0.025, effect sizes (z): [2.5, 2.2, 2.0, 1.8], equicorrelation=0.3. Use the new objective API (WeightedSuccess + MarginalRejection) and give me a reproducible run that outputs a result.json and a design_optimized.png.",
+      "expected_output": "Creates a JSON config and runs the runner script to produce an output folder with result.json (weights/transitions + power metrics) and optional design/training plots.",
+      "files": [],
+      "expectations": [
+        "Creates outputs/config.json",
+        "Creates outputs/result.json",
+        "result.json parses and contains optimal_weights (len=4) and optimal_transitions (4x4)",
+        "optimal_weights are non-negative and sum approximately to 0.025",
+        "optimal_transitions entries are non-negative and each row sum is <= 1",
+        "Creates outputs/design_optimized.png"
+      ]
+    },
+    {
+      "id": 1,
+      "prompt": "Optimize a hierarchical (gated) objective: H2 and H3 should only count as success if H1 is rejected. Use weights [0.6,0.25,0.1,0.05] for H1..H4. Keep alpha=0.025, effect sizes [2.1,1.9,1.4,1.2], corr=0.3. I want a runnable config + outputs.",
+      "expected_output": "Produces a config with GatedSuccess dependencies and runs optimization; outputs result.json and summary of weights/transitions.",
+      "files": [],
+      "expectations": [
+        "Creates outputs/config.json",
+        "config.json uses objective.success.type == 'gated' and includes dependencies that gate H2 and H3 on H1",
+        "Creates outputs/result.json",
+        "result.json parses and contains optimal_weights (len=4) and optimal_transitions (4x4)",
+        "Creates outputs/design_optimized.png"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Do a group sequential version with 3 looks at information fractions [0.5,0.75,1.0] using Hwang-Shih-DeCani spending (gamma=-4) and optimize spending. Optimize the graphical structure too. Return output files and a short interpretation.",
+      "expected_output": "Creates sequential-enabled config and runs optimize_sequential_procedure via runner; outputs result.json and plots if available.",
+      "files": [],
+      "expectations": [
+        "Creates outputs/config.json with sequential.enabled=true, n_analyses=3, information_fractions=[0.5,0.75,1.0], and spending_function.type='hsd' gamma=-4",
+        "Creates outputs/result.json",
+        "result.json parses and indicates sequential.enabled == true and echoes information_fractions",
+        "Creates outputs/design_optimized.png",
+        "Creates an interpretation text file summarizing the sequential setup"
+      ]
+    }
+  ]
+}
