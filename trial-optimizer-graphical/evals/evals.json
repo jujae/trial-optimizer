@@ -10,7 +10,7 @@
         "Creates outputs/config.json",
         "Creates outputs/result.json",
         "result.json parses and contains optimal_weights (len=4) and optimal_transitions (4x4)",
-        "optimal_weights are non-negative and sum approximately to 0.025",
+        "optimal_weights are non-negative and sum approximately to 1.0",
         "optimal_transitions entries are non-negative and each row sum is <= 1",
         "Creates outputs/design_optimized.png"
       ]
